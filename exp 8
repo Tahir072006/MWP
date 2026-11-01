@@ -1,0 +1,221 @@
+
+const express = require("express");
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
+const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+const JWT_SECRET = "my_secret_key_123";
+
+// MongoDB Connection
+mongoose.connect("mongodb://127.0.0.1:27017/jwt_auth")
+    .then(() => console.log("MongoDB Connected"))
+    .catch(err => console.log(err));
+
+// User Schema
+const User = mongoose.model("User", new mongoose.Schema({
+    username: { type: String, unique: true },
+    password: String
+}));
+
+// JWT Authentication Middleware
+function auth(req, res, next) {
+    const token = req.headers.authorization?.split(" ")[1];
+
+    if (!token)
+        return res.status(401).send("Access Denied");
+
+    try {
+        req.user = jwt.verify(token, JWT_SECRET);
+        next();
+    } catch (err) {
+        res.status(401).send("Invalid Token");
+    }
+}
+
+// USER REGISTRATION
+app.post("/register", async (req, res) => {
+    try {
+        const { username, password } = req.body;
+
+        const existing = await User.findOne({ username });
+
+        if (existing)
+            return res.send("User already exists");
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const user = new User({
+            username,
+            password: hashedPassword
+        });
+
+        await user.save();
+
+        res.send("Registration Successful");
+    } catch (err) {
+        res.status(500).send("Registration Failed");
+    }
+});
+
+// USER LOGIN
+app.post("/login", async (req, res) => {
+    try {
+        const { username, password } = req.body;
+
+        const user = await User.findOne({ username });
+
+        if (!user)
+            return res.status(400).send("User not found");
+
+        const valid = await bcrypt.compare(password, user.password);
+
+        if (!valid)
+            return res.status(400).send("Invalid Password");
+
+        const token = jwt.sign(
+            { id: user._id, username: user.username },
+            JWT_SECRET,
+            { expiresIn: "1h" }
+        );
+
+        res.json({
+            message: "Login Successful",
+            token
+        });
+    } catch (err) {
+        res.status(500).send("Login Failed");
+    }
+});
+
+// PROTECTED ROUTE
+app.get("/dashboard", auth, (req, res) => {
+    res.json({
+        message: "Welcome to Protected Dashboard",
+        user: req.user.username
+    });
+});
+
+// FRONTEND HTML
+app.get("/", (req, res) => {
+    res.send(`
+    <html>
+    <head>
+        <title>JWT Authentication</title>
+        <style>
+            body {
+                font-family: Arial;
+                background: #eee;
+                text-align: center;
+                padding: 40px;
+            }
+            .box {
+                background: white;
+                padding: 25px;
+                width: 300px;
+                margin: auto;
+                border-radius: 10px;
+            }
+            input, button {
+                padding: 10px;
+                margin: 8px;
+                width: 90%;
+            }
+            button {
+                background: blue;
+                color: white;
+                border: none;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="box">
+            <h2>JWT Authentication</h2>
+
+            <h3>Register</h3>
+            <input id="reguser" placeholder="Username">
+            <input id="regpass" type="password" placeholder="Password">
+            <button onclick="register()">Register</button>
+
+            <h3>Login</h3>
+            <input id="loguser" placeholder="Username">
+            <input id="logpass" type="password" placeholder="Password">
+            <button onclick="login()">Login</button>
+
+            <h3>Dashboard</h3>
+            <button onclick="dashboard()">Access Dashboard</button>
+            <button onclick="logout()">Logout</button>
+
+            <p id="result"></p>
+        </div>
+
+        <script>
+            let token = "";
+
+            async function register() {
+                const res = await fetch("/register", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({
+                        username: document.getElementById("reguser").value,
+                        password: document.getElementById("regpass").value
+                    })
+                });
+
+                document.getElementById("result").innerText =
+                    await res.text();
+            }
+
+            async function login() {
+                const res = await fetch("/login", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({
+                        username: document.getElementById("loguser").value,
+                        password: document.getElementById("logpass").value
+                    })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    token = data.token;
+                }
+
+                document.getElementById("result").innerText =
+                    data.message;
+            }
+
+            async function dashboard() {
+                const res = await fetch("/dashboard", {
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                });
+
+                const data = await res.json().catch(() => ({}));
+
+                document.getElementById("result").innerText =
+                    data.message || "Access Denied";
+            }
+
+            function logout() {
+                token = "";
+                document.getElementById("result").innerText =
+                    "Logged out successfully";
+            }
+        </script>
+    </body>
+    </html>
+    `);
+});
+
+// START SERVER
+app.listen(5000, () => {
+    console.log("Server running on http://localhost:5000");
+});
