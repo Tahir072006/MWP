@@ -1,0 +1,519 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+        content="Explore our optimized website with fast performance, accessibility, and secure browsing.">
+
+    <meta name="keywords"
+        content="website optimization, Lighthouse, web performance, SEO">
+
+    <meta name="author" content="Website Optimization Project">
+
+    <meta name="theme-color" content="#2563eb">
+
+    <title>Optimized Website | Lighthouse Project</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+</head>
+
+<body>
+
+    <header>
+        <nav class="navbar" aria-label="Main navigation">
+
+            <h1 class="logo">WebOptimize</h1>
+
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+
+        </nav>
+    </header>
+
+    <main>
+
+        <section id="home" class="hero">
+
+            <div class="hero-content">
+
+                <h2>Build Faster and Better Websites</h2>
+
+                <p>
+                    Experience a fast, accessible, secure,
+                    and user-friendly website.
+                </p>
+
+                <a href="#services" class="btn">
+                    Explore Services
+                </a>
+
+            </div>
+
+            <img
+                src="images/hero.webp"
+                alt="Modern web development workspace"
+                width="500"
+                height="300"
+                fetchpriority="high">
+
+        </section>
+
+        <section id="about" class="section">
+
+            <h2>About Our Website</h2>
+
+            <p>
+                Our website is optimized using Google Lighthouse
+                to improve loading speed, accessibility,
+                SEO, and security.
+            </p>
+
+        </section>
+
+        <section id="services" class="section">
+
+            <h2>Our Services</h2>
+
+            <div class="cards">
+
+                <article class="card">
+                    <h3>Performance</h3>
+                    <p>Fast loading and optimized resources.</p>
+                </article>
+
+                <article class="card">
+                    <h3>Accessibility</h3>
+                    <p>Easy navigation for all users.</p>
+                </article>
+
+                <article class="card">
+                    <h3>Security</h3>
+                    <p>Safer browsing and protected inputs.</p>
+                </article>
+
+            </div>
+
+        </section>
+
+        <section id="contact" class="section">
+
+            <h2>Contact Us</h2>
+
+            <form id="contactForm">
+
+                <label for="name">Name</label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter your name"
+                    maxlength="60"
+                    required>
+
+                <label for="email">Email</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    maxlength="254"
+                    required>
+
+                <label for="message">Message</label>
+
+                <textarea
+                    id="message"
+                    name="message"
+                    placeholder="Enter your message"
+                    maxlength="1000"
+                    required></textarea>
+
+                <button type="submit">Submit</button>
+
+                <p id="status" role="status" aria-live="polite"></p>
+
+            </form>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>© 2026 WebOptimize. All Rights Reserved.</p>
+    </footer>
+
+    <script src="script.js" defer></script>
+
+</body>
+</html>
+
+
+
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #1f2937;
+    background: #f8fafc;
+}
+
+/* Navigation */
+.navbar {
+    background: #1e3a8a;
+    color: white;
+    padding: 18px 8%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.logo {
+    font-size: 25px;
+}
+
+.navbar ul {
+    display: flex;
+    list-style: none;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+/* Keyboard focus */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid #f59e0b;
+    outline-offset: 3px;
+}
+
+/* Hero */
+.hero {
+    min-height: 400px;
+    padding: 60px 8%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 35px;
+    background: #dbeafe;
+}
+
+.hero-content {
+    max-width: 550px;
+}
+
+.hero h2 {
+    font-size: 38px;
+    margin-bottom: 15px;
+    color: #1e3a8a;
+}
+
+.hero p {
+    margin-bottom: 25px;
+}
+
+.hero img {
+    width: 45%;
+    max-width: 500px;
+    height: auto;
+    border-radius: 12px;
+}
+
+/* Button */
+.btn,
+button {
+    display: inline-block;
+    background: #1d4ed8;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.btn:hover,
+button:hover {
+    background: #1e40af;
+}
+
+/* Sections */
+.section {
+    padding: 55px 8%;
+    text-align: center;
+}
+
+.section h2 {
+    font-size: 30px;
+    margin-bottom: 25px;
+}
+
+/* Cards */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+}
+
+.card h3 {
+    color: #1d4ed8;
+    margin-bottom: 10px;
+}
+
+/* Form */
+form {
+    max-width: 500px;
+    margin: auto;
+    text-align: left;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    border: 1px solid #64748b;
+    border-radius: 5px;
+    font: inherit;
+}
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+form button {
+    margin-top: 20px;
+}
+
+#status {
+    margin-top: 12px;
+}
+
+/* Footer */
+footer {
+    background: #1e3a8a;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+
+    .navbar {
+        flex-direction: column;
+    }
+
+    .navbar ul {
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .hero {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .hero img {
+        width: 100%;
+    }
+
+    .hero h2 {
+        font-size: 28px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+
+"use strict";
+
+// Lazy loading for images that are not immediately visible
+document.querySelectorAll("img:not([fetchpriority='high'])")
+    .forEach((image) => {
+        image.loading = "lazy";
+        image.decoding = "async";
+    });
+
+// Contact form validation
+const form = document.getElementById("contactForm");
+
+const status = document.getElementById("status");
+
+form.addEventListener("submit", function (event) {
+
+    event.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+
+    const email = document.getElementById("email").value.trim();
+
+    const message = document.getElementById("message").value.trim();
+
+    if (!name || !email || !message) {
+        status.textContent = "Please fill all fields.";
+        return;
+    }
+
+    if (name.length > 60 || message.length > 1000) {
+        status.textContent = "Input length exceeded.";
+        return;
+    }
+
+    // Demo only: no data is sent to a server
+    status.textContent = "Form validated successfully!";
+
+    form.reset();
+
+});
+
+
+const express = require("express");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
+const path = require("path");
+
+const app = express();
+
+const PORT = process.env.PORT || 3000;
+
+// Security headers
+app.use(helmet());
+
+// Prevent excessive requests
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 100,
+    standardHeaders: "draft-7",
+    legacyHeaders: false
+});
+
+app.use(limiter);
+
+// Parse JSON safely
+app.use(express.json({
+    limit: "10kb"
+}));
+
+app.use(express.urlencoded({
+    extended: false,
+    limit: "10kb"
+}));
+
+// Serve static website
+app.use(express.static(path.join(__dirname), {
+    index: "index.html",
+    maxAge: "1d",
+    etag: true
+}));
+
+// Example contact API
+app.post("/api/contact", (req, res) => {
+
+    const { name, email, message } = req.body;
+
+    if (
+        typeof name !== "string" ||
+        typeof email !== "string" ||
+        typeof message !== "string"
+    ) {
+        return res.status(400).json({
+            success: false,
+            message: "Invalid input"
+        });
+    }
+
+    if (
+        name.trim().length === 0 ||
+        name.length > 60 ||
+        email.length > 254 ||
+        message.trim().length === 0 ||
+        message.length > 1000
+    ) {
+        return res.status(400).json({
+            success: false,
+            message: "Input validation failed"
+        });
+    }
+
+    // Demo only. Add database/email integration here.
+    res.json({
+        success: true,
+        message: "Contact request received"
+    });
+
+});
+
+// Start server
+app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+});
