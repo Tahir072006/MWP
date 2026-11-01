@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Form Validation</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            padding: 25px;
+            width: 350px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px gray;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .error {
+            color: red;
+            font-size: 13px;
+        }
+
+        #success {
+            color: green;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Registration Form</h2>
+
+    <form id="myForm">
+
+        <label>Name:</label>
+        <input type="text" id="name" placeholder="Enter Name">
+        <span class="error" id="nameError"></span>
+
+        <br><br>
+
+        <label>Email:</label>
+        <input type="text" id="email" placeholder="Enter Email">
+        <span class="error" id="emailError"></span>
+
+        <br><br>
+
+        <label>Phone:</label>
+        <input type="text" id="phone" placeholder="Enter Phone Number">
+        <span class="error" id="phoneError"></span>
+
+        <br><br>
+
+        <label>Password:</label>
+        <input type="password" id="password" placeholder="Enter Password">
+        <span class="error" id="passwordError"></span>
+
+        <br><br>
+
+        <button type="submit">Submit</button>
+
+        <p id="success"></p>
+
+    </form>
+
+</div>
+
+<script>
+
+document.getElementById("myForm").addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+    // Get form values
+    let name = document.getElementById("name").value.trim();
+    let email = document.getElementById("email").value.trim();
+    let phone = document.getElementById("phone").value.trim();
+    let password = document.getElementById("password").value;
+
+    // Regex patterns
+    let nameRegex = /^[A-Za-z ]{3,}$/;
+    let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    let phoneRegex = /^[0-9]{10}$/;
+    let passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#$%]).{8,}$/;
+
+    // Clear previous errors
+    document.getElementById("nameError").innerHTML = "";
+    document.getElementById("emailError").innerHTML = "";
+    document.getElementById("phoneError").innerHTML = "";
+    document.getElementById("passwordError").innerHTML = "";
+    document.getElementById("success").innerHTML = "";
+
+    let valid = true;
+
+    // Name validation
+    if (!nameRegex.test(name)) {
+        document.getElementById("nameError").innerHTML =
+            "Enter a valid name (minimum 3 letters)";
+        valid = false;
+    }
+
+    // Email validation
+    if (!emailRegex.test(email)) {
+        document.getElementById("emailError").innerHTML =
+            "Enter a valid email address";
+        valid = false;
+    }
+
+    // Phone validation
+    if (!phoneRegex.test(phone)) {
+        document.getElementById("phoneError").innerHTML =
+            "Phone number must contain 10 digits";
+        valid = false;
+    }
+
+    // Password validation
+    if (!passwordRegex.test(password)) {
+        document.getElementById("passwordError").innerHTML =
+            "Password must contain 8 characters, uppercase, lowercase, number and special character (@#$%)";
+        valid = false;
+    }
+
+    // Final validation
+    if (valid) {
+        document.getElementById("success").innerHTML =
+            "Form Submitted Successfully!";
+        document.getElementById("myForm").reset();
+    }
+
+});
+
+</script>
+
+</body>
+</html>
