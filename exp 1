@@ -1,0 +1,487 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Personal Portfolio</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <nav class="navbar">
+            <h1 class="logo">My Portfolio</h1>
+
+            <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="home" class="hero">
+
+        <div class="hero-content">
+            <h2>Hello, I'm <span>Tahir Ahamed</span></h2>
+
+            <h3>Computer Science Student & Web Developer</h3>
+
+            <p>
+                I am passionate about programming, web development
+                and creating innovative digital solutions.
+            </p>
+
+            <a href="#projects" class="btn">View My Projects</a>
+        </div>
+
+        <div class="hero-image">
+            <img src="https://placehold.co/300x300"
+                 alt="Profile Image">
+        </div>
+
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about" class="section">
+        <h2>About Me</h2>
+
+        <p>
+            I am a Computer Science student interested in software
+            development and modern technologies. I enjoy learning
+            new programming languages and building useful projects.
+            My goal is to become a skilled software developer.
+        </p>
+    </section>
+
+    <!-- SKILLS SECTION -->
+    <section id="skills" class="section skills-section">
+
+        <h2>My Skills</h2>
+
+        <div class="skills-grid">
+
+            <div class="skill-card">HTML5</div>
+            <div class="skill-card">CSS3</div>
+            <div class="skill-card">JavaScript</div>
+            <div class="skill-card">Tailwind CSS</div>
+            <div class="skill-card">React</div>
+            <div class="skill-card">Python</div>
+            <div class="skill-card">C++</div>
+            <div class="skill-card">MongoDB</div>
+
+        </div>
+
+    </section>
+
+    <!-- PROJECTS SECTION -->
+    <section id="projects" class="section">
+
+        <h2>My Projects</h2>
+
+        <div class="projects-grid">
+
+            <div class="project-card">
+                <h3>Portfolio Website</h3>
+                <p>
+                    A responsive personal portfolio website
+                    created using HTML, CSS and Tailwind CSS.
+                </p>
+            </div>
+
+            <div class="project-card">
+                <h3>Travel Management System</h3>
+                <p>
+                    A web application that allows users to
+                    search and book flights and hotels.
+                </p>
+            </div>
+
+            <div class="project-card">
+                <h3>Lost and Found Portal</h3>
+                <p>
+                    A platform where users can report lost items
+                    and find their missing belongings.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="section contact-section">
+
+        <h2>Contact Me</h2>
+
+        <form id="contactForm">
+
+            <input type="text"
+                   id="name"
+                   placeholder="Enter Your Name"
+                   required>
+
+            <input type="email"
+                   id="email"
+                   placeholder="Enter Your Email"
+                   required>
+
+            <textarea id="message"
+                      placeholder="Enter Your Message"
+                      required></textarea>
+
+            <button type="submit" class="btn">
+                Send Message
+            </button>
+
+        </form>
+
+        <p id="response"></p>
+
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>© 2026 Tahir Ahamed | All Rights Reserved</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+
+</body>
+</html>
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+/* GENERAL STYLING */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* HEADER */
+header {
+    background-color: #1e293b;
+    color: white;
+    padding: 20px;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 26px;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 25px;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.nav-links a:hover {
+    color: #38bdf8;
+}
+
+.menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+/* HERO SECTION */
+.hero {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 80px 10%;
+    background-color: #dbeafe;
+    gap: 30px;
+}
+
+.hero-content {
+    max-width: 550px;
+}
+
+.hero-content h2 {
+    font-size: 36px;
+    margin-bottom: 15px;
+}
+
+.hero-content h2 span {
+    color: #2563eb;
+}
+
+.hero-content h3 {
+    margin-bottom: 15px;
+}
+
+.hero-content p {
+    line-height: 1.7;
+    margin-bottom: 25px;
+}
+
+.hero-image img {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* BUTTON */
+.btn {
+    display: inline-block;
+    background-color: #2563eb;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #1e40af;
+}
+
+/* COMMON SECTION */
+.section {
+    padding: 60px 10%;
+    text-align: center;
+}
+
+.section h2 {
+    font-size: 30px;
+    margin-bottom: 30px;
+}
+
+/* ABOUT */
+#about p {
+    max-width: 750px;
+    margin: auto;
+    line-height: 1.8;
+    font-size: 17px;
+}
+
+/* SKILLS */
+.skills-section {
+    background-color: white;
+}
+
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.skill-card {
+    background-color: #dbeafe;
+    padding: 25px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.skill-card:hover {
+    background-color: #2563eb;
+    color: white;
+    transform: scale(1.05);
+}
+
+/* PROJECTS */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.project-card {
+    background-color: white;
+    padding: 30px 20px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+.project-card:hover {
+    transform: translateY(-8px);
+}
+
+.project-card h3 {
+    margin-bottom: 15px;
+    color: #2563eb;
+}
+
+.project-card p {
+    line-height: 1.6;
+}
+
+/* CONTACT */
+.contact-section {
+    background-color: white;
+}
+
+#contactForm {
+    max-width: 500px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#contactForm input,
+#contactForm textarea {
+    padding: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 100%;
+}
+
+#contactForm textarea {
+    height: 120px;
+    resize: vertical;
+}
+
+#response {
+    margin-top: 20px;
+    color: green;
+    font-weight: bold;
+}
+
+/* FOOTER */
+footer {
+    background-color: #1e293b;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+/* TABLET RESPONSIVENESS */
+@media (max-width: 900px) {
+
+    .skills-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .hero {
+        padding: 60px 5%;
+    }
+}
+
+/* MOBILE RESPONSIVENESS */
+@media (max-width: 600px) {
+
+    .navbar {
+        flex-wrap: wrap;
+    }
+
+    .menu-btn {
+        display: block;
+    }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        padding-top: 20px;
+        gap: 15px;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .hero {
+        flex-direction: column;
+        text-align: center;
+        padding: 50px 20px;
+    }
+
+    .hero-content h2 {
+        font-size: 28px;
+    }
+
+    .hero-image img {
+        width: 180px;
+        height: 180px;
+    }
+
+    .skills-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .section {
+        padding: 45px 20px;
+    }
+}
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+// Mobile Navigation Menu
+function toggleMenu() {
+    const navLinks = document.getElementById("navLinks");
+    navLinks.classList.toggle("active");
+}
+
+// Close menu after clicking a navigation link
+document.querySelectorAll(".nav-links a").forEach(link => {
+    link.addEventListener("click", function() {
+        document.getElementById("navLinks").classList.remove("active");
+    });
+});
+
+// Contact Form
+document.getElementById("contactForm").addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+    const name = document.getElementById("name").value;
+
+    document.getElementById("response").textContent =
+        "Thank you, " + name + "! Your message has been submitted.";
+
+    document.getElementById("contactForm").reset();
+});
