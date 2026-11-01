@@ -1,0 +1,321 @@
+
+const express = require("express");
+const mongoose = require("mongoose");
+
+const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// MongoDB Connection
+mongoose.connect("mongodb://127.0.0.1:27017/taskmanager")
+.then(() => console.log("MongoDB Connected"))
+.catch(err => console.log(err));
+
+// Task Schema
+const Task = mongoose.model("Task", {
+    title: String,
+    description: String,
+    status: {
+        type: String,
+        default: "Pending"
+    }
+});
+
+// FRONTEND
+app.get("/", (req, res) => {
+    res.send(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Task Manager</title>
+        <style>
+            body {
+                font-family: Arial;
+                background: #eef2f7;
+                padding: 30px;
+            }
+            .container {
+                max-width: 650px;
+                margin: auto;
+                background: white;
+                padding: 25px;
+                border-radius: 12px;
+            }
+            h1 {
+                text-align: center;
+                color: #2563eb;
+            }
+            input, textarea {
+                width: 100%;
+                padding: 12px;
+                margin: 8px 0;
+                box-sizing: border-box;
+            }
+            button {
+                padding: 10px 15px;
+                border: none;
+                color: white;
+                border-radius: 5px;
+                cursor: pointer;
+                margin: 4px;
+            }
+            .add { background: #2563eb; }
+            .edit { background: #16a34a; }
+            .delete { background: #dc2626; }
+            .complete { background: #0891b2; }
+            .task {
+                background: #f1f5f9;
+                padding: 15px;
+                margin-top: 15px;
+                border-radius: 8px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Task Manager</h1>
+
+            <h3>Add / Update Task</h3>
+
+            <input id="title" placeholder="Enter task title">
+            <textarea id="description"
+                placeholder="Enter description"></textarea>
+
+            <button class="add" onclick="saveTask()">
+                Save Task
+            </button>
+
+            <h3>My Tasks</h3>
+            <div id="taskList"></div>
+        </div>
+
+        <script>
+            let editId = null;
+
+            // READ TASKS
+            async function loadTasks() {
+                const res = await fetch("/api/tasks");
+                const tasks = await res.json();
+
+                document.getElementById("taskList").innerHTML =
+                    tasks.map(task => `
+                    <div class="task">
+                        <h3>${escapeHTML(task.title)}</h3>
+                        <p>${escapeHTML(task.description || "")}</p>
+                        <b>${escapeHTML(task.status)}</b><br>
+
+                        <button class="edit"
+                            onclick="editTask('${task._id}')">
+                            Edit
+                        </button>
+
+                        <button class="delete"
+                            onclick="deleteTask('${task._id}')">
+                            Delete
+                        </button>
+
+                        <button class="complete"
+                            onclick="toggleTask('${task._id}',
+                            '${task.status}')">
+                            ${task.status === "Pending"
+                                ? "Complete" : "Reopen"}
+                        </button>
+                    </div>
+                `).join("");
+            }
+
+            // Escape user input before displaying it
+            function escapeHTML(value) {
+                return String(value).replace(/[&<>"']/g, char => ({
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#39;"
+                })[char]);
+            }
+
+            // CREATE / UPDATE TASK
+            async function saveTask() {
+                const title = document.getElementById("title").value;
+                const description =
+                    document.getElementById("description").value;
+
+                if (!title.trim()) {
+                    alert("Enter task title");
+                    return;
+                }
+
+                const url = editId
+                    ? "/api/tasks/" + editId
+                    : "/api/tasks";
+
+                const method = editId ? "PUT" : "POST";
+
+                const res = await fetch(url, {
+                    method: method,
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        title,
+                        description
+                    })
+                });
+
+                if (!res.ok) {
+                    alert("Unable to save task");
+                    return;
+                }
+
+                document.getElementById("title").value = "";
+                document.getElementById("description").value = "";
+                editId = null;
+
+                loadTasks();
+            }
+
+            // EDIT TASK
+            async function editTask(id) {
+                const res = await fetch("/api/tasks");
+                const tasks = await res.json();
+
+                const task = tasks.find(t => t._id === id);
+
+                if (task) {
+                    document.getElementById("title").value =
+                        task.title;
+
+                    document.getElementById("description").value =
+                        task.description || "";
+
+                    editId = id;
+                }
+            }
+
+            // DELETE TASK
+            async function deleteTask(id) {
+                if (!confirm("Delete this task?")) return;
+
+                await fetch("/api/tasks/" + id, {
+                    method: "DELETE"
+                });
+
+                loadTasks();
+            }
+
+            // UPDATE STATUS
+            async function toggleTask(id, status) {
+                await fetch("/api/tasks/" + id, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        status: status === "Pending"
+                            ? "Completed" : "Pending"
+                    })
+                });
+
+                loadTasks();
+            }
+
+            loadTasks();
+        </script>
+    </body>
+    </html>
+    `);
+});
+
+// CREATE TASK
+app.post("/api/tasks", async (req, res) => {
+    try {
+        if (!req.body.title?.trim()) {
+            return res.status(400).json({
+                message: "Title is required"
+            });
+        }
+
+        const task = await Task.create({
+            title: req.body.title,
+            description: req.body.description
+        });
+
+        res.status(201).json(task);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+// READ TASKS
+app.get("/api/tasks", async (req, res) => {
+    try {
+        const tasks = await Task.find().sort({ _id: -1 });
+        res.json(tasks);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+// UPDATE TASK
+app.put("/api/tasks/:id", async (req, res) => {
+    try {
+        const update = {};
+
+        if (req.body.title !== undefined) {
+            update.title = req.body.title;
+        }
+
+        if (req.body.description !== undefined) {
+            update.description = req.body.description;
+        }
+
+        if (req.body.status !== undefined) {
+            if (!["Pending", "Completed"].includes(req.body.status)) {
+                return res.status(400).json({
+                    message: "Invalid status"
+                });
+            }
+            update.status = req.body.status;
+        }
+
+        const task = await Task.findByIdAndUpdate(
+            req.params.id,
+            update,
+            { new: true }
+        );
+
+        if (!task) {
+            return res.status(404).json({
+                message: "Task not found"
+            });
+        }
+
+        res.json(task);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+// DELETE TASK
+app.delete("/api/tasks/:id", async (req, res) => {
+    try {
+        const task = await Task.findByIdAndDelete(req.params.id);
+
+        if (!task) {
+            return res.status(404).json({
+                message: "Task not found"
+            });
+        }
+
+        res.json({ message: "Task deleted successfully" });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+// START SERVER
+app.listen(5000, () => {
+    console.log("Server running at http://localhost:5000");
+});
