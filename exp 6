@@ -1,0 +1,125 @@
+
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+
+const app = express();
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// MongoDB Connection
+mongoose.connect("mongodb://127.0.0.1:27017/taskmanager")
+.then(() => console.log("MongoDB Connected Successfully"))
+.catch(err => console.log(err));
+
+// Task Schema
+const taskSchema = new mongoose.Schema({
+    title: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String
+    },
+    status: {
+        type: String,
+        default: "Pending"
+    }
+});
+
+// Task Model
+const Task = mongoose.model("Task", taskSchema);
+
+// 1. CREATE TASK - POST /tasks
+app.post("/tasks", async (req, res) => {
+    try {
+        const task = new Task(req.body);
+        await task.save();
+
+        res.status(201).json({
+            message: "Task Created Successfully",
+            task: task
+        });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
+
+// 2. GET ALL TASKS - GET /tasks
+app.get("/tasks", async (req, res) => {
+    try {
+        const tasks = await Task.find();
+        res.json(tasks);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// 3. GET TASK BY ID - GET /tasks/:id
+app.get("/tasks/:id", async (req, res) => {
+    try {
+        const task = await Task.findById(req.params.id);
+
+        if (!task) {
+            return res.status(404).json({
+                message: "Task Not Found"
+            });
+        }
+
+        res.json(task);
+    } catch (err) {
+        res.status(400).json({ error: "Invalid Task ID" });
+    }
+});
+
+// 4. UPDATE TASK - PUT /tasks/:id
+app.put("/tasks/:id", async (req, res) => {
+    try {
+        const task = await Task.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true, runValidators: true }
+        );
+
+        if (!task) {
+            return res.status(404).json({
+                message: "Task Not Found"
+            });
+        }
+
+        res.json({
+            message: "Task Updated Successfully",
+            task: task
+        });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
+
+// 5. DELETE TASK - DELETE /tasks/:id
+app.delete("/tasks/:id", async (req, res) => {
+    try {
+        const task = await Task.findByIdAndDelete(req.params.id);
+
+        if (!task) {
+            return res.status(404).json({
+                message: "Task Not Found"
+            });
+        }
+
+        res.json({
+            message: "Task Deleted Successfully"
+        });
+    } catch (err) {
+        res.status(400).json({ error: "Invalid Task ID" });
+    }
+});
+
+// Start Server
+const PORT = 5000;
+
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+});
